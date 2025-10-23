@@ -1,7 +1,7 @@
 variable "cluster_name" {
   description = "The name of the kind cluster"
   type        = string
-  default     = "test-cluster"
+  default     = "dev-cluster"
 }
 
 variable "control_plane_node_image" {
@@ -13,7 +13,7 @@ variable "control_plane_node_image" {
 variable "worker_node_image" {
   description = "The node image for the kind cluster"
   type        = string
-  default     = "kindest/node:v1.27.1"
+  default     = "kindest/node:v1.29.1"
 }
 
 variable "kubeconfig_path" {

@@ -15,3 +15,6 @@ ingress:
   host: demo.local
   path: /
   pathType: Prefix
+  tls:
+    enabled: false
+    secretName: demo-local-tls
