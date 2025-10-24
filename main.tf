@@ -23,6 +23,43 @@ provider "helm" {
   }
 }
 
+provider "kubernetes" {
+  config_path = pathexpand("~/.kube/config")
+}
+
+resource "kubernetes_manifest" "letsencrypt_prod" {
+  manifest = {
+    apiVersion = "cert-manager.io/v1"
+    kind       = "ClusterIssuer"
+    metadata = {
+      name = "letsencrypt-prod"
+    }
+    spec = {
+      acme = {
+        server = "https://acme-v02.api.letsencrypt.org/directory"
+        email  = "your-email@example.com"
+        privateKeySecretRef = {
+          name = "letsencrypt-prod"
+        }
+        solvers = [{
+          http01 = {
+            ingress = {
+              class = "nginx"
+            }
+          }
+        }]
+      }
+    }
+  }
+
+  depends_on = [
+    kind_cluster.default,
+    helm_release.cert_manager,
+    kubernetes_manifest.letsencrypt_prod
+  ]
+}
+
+
 resource "helm_release" "cert_manager" {
     name             = "cert-manager" 
     repository       = "https://charts.jetstack.io" 
